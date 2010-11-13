@@ -18,7 +18,7 @@ var player = {
 	vy:0,
 	draw: function(){
 		ctx.beginPath();
-		ctx.rect(player.x, player.y, player.w, player.h);
+		ctx.rect(this.x, this.y, this.w, this.h);
 		ctx.closePath();
 		ctx.fill();
 	},
@@ -27,29 +27,42 @@ var player = {
 													+ "<br> keyPressed.down: " + keyPressed.down
 													+ "<br> keyPressed.left: " + keyPressed.left
 													+ "<br> keyPressed.right: " + keyPressed.right
-													+ "<br> player.x: " + player.x
-													+ "<br> player.y: " + player.y
-													+ "<br> player.vx: " + player.vx
-													+ "<br> player.vy: " + player.vy;
-		if(keyPressed.up) player.vy = -2;
-		if(keyPressed.down) player.vy = 2;
-		if(keyPressed.left) player.vx = -2;
-		if(keyPressed.right) player.vx = 2;
+													+ "<br> player.x: " + this.x
+													+ "<br> player.y: " + this.y
+													+ "<br> player.vx: " + this.vx
+													+ "<br> player.vy: " + this.vy;
+		if(keyPressed.up) this.vy = -2;
+		if(keyPressed.down) this.vy = 2;
+		if(keyPressed.left) this.vx = -2;
+		if(keyPressed.right) this.vx = 2;
 
-		player.x += player.vx;
-		player.y += player.vy;
-		player.vx *= 0.95;
-		player.vy *= 0.95;
+		this.x += this.vx;
+		this.y += this.vy;
+		this.vx *= 0.95;
+		this.vy *= 0.95;
 		
-		if(player.x <= 0 || player.x + player.w >= playGround.w){
-			player.vx = -player.vx;
-			player.x = 0;			
+		if(this.x <= 0 || this.x + this.w >= playGround.w){
+			this.vx = -this.vx;
+			this.x = 0;			
 		}
-		if(player.y <= 0 || player.y + player.h >= playGround.h){
-			player.vy = -player.vy;
-			player.y = 0;
+		if(this.y <= 0 || this.y + this.h >= playGround.h){
+			this.vy = -this.vy;
+			this.y = 0;
 		}
 			
+	},
+	isLeftOf: function(p){ //seite 63
+		return this.x + this.w < p.x;
+	},
+	isAbove: function(p){
+		return this.y < p.y +p.h;
+	},
+	touches: function(p){
+		if(this.isLeftOf(p)) 	return false;
+		if(p.isLeftOf(this)) 	return false;
+		if(this.isAbove(p)) 	return false;
+		if(p.isAbove(this)) 	return false;
+		return true;
 	}
 	
 };
